@@ -1,10 +1,11 @@
 # DeFi评估：评估无许可贷款协议的风险 <br/> 
 ## [tl;dr]<br/>
-本文介绍一个无许可贷款协议（Permissionless Lending Protocols）中风险水平的评估模型。为了展现这些协议平台中存在的各种风险，我们使用了一个多因素模型来研究智能合约、抵押品和流动性风险。该模型混合了公链中链上和链下的数据来更好地评估不同的、基于以太坊的无许可贷款协议产品的相对风险水平。<br><br/>
+本文介绍一个无许可贷款协议（Permissionless Lending Protocols）中风险水平的评估模型。为了展现这些协议平台中存在的各种风险，我们使用了一个多因素模型来研究智能合约、抵押品、流动性和中心化的风险。该模型混合了公链中链上和链下的数据来更好地评估不同的、基于以太坊的无许可贷款协议产品的相对风险水平。<br><br/>
 
 ## 目录
- 
-  - [目录](#table-of-contents)
+  - [DeFi评估：评估无许可贷款协议的风险](#DeFi评估：评估无许可贷款协议的风险)
+  - [tl;dr](#tldr)
+  - [目录](#目录)
   - [简介](#简介)
   - [无许可贷款协议概述](#overview-of-permissionless-lending-protocols)
     - [智能合约技术风险](#smart-contract-risk)
@@ -18,7 +19,7 @@
       - [预言机](#oracles)
   - [公式分解](#formula-breakdown)
   - [局限](#limitations)
-    - [DAI Savings Rate](#dai-savings-rate)
+    - [DAI存款利率](#dai-savings-rate)
   - [未来的改善](#future-improvements)
   - [参考](#references)
   - [贡献者](#contributors)
@@ -28,7 +29,7 @@
   - [许可](#license)
 ## 简介 <br/>
 中本聪创立比特币的主要动力是2008年的金融危机。他在比特币的创世区块（Genesis Block）提到了当时的银行救助计划（注1）。一些人认为，金融危机部分原因是由于金融界对整个金融体系信贷风险的误解和错误定价造成的。风险管理是现代金融中最关键的部分之一，它为我们建立了一个更加稳健和安全的金融体系。<br><br>
-在过去的一年里，我们看到了以太坊上无许可的金融协议爆炸式增长，其中很大一部分集中在借贷市场。这些市场已发展成为“去中心化金融”或“DeFi”的最大子类别，年增长率达355% （注2）。然而，并非所有的借贷平台都是一样的。不同的无许可贷款产品具有非常不同的风险/回报，这使得仅比较它们的利率就好像比较苹果和桔子一样毫无意义。<br><br>
+在过去的一年里，我们看到了以太坊上无许可的金融协议爆炸式增长，其中很大一部分集中在借贷市场。这些市场已发展成为“去中心化金融”或“DeFi”中的最大子类别，年增长率达355% （注2）。然而，并非所有的借贷平台都是一样的。不同的无许可贷款产品具有非常不同的风险/回报，这使得仅比较它们的利率就好像比较苹果和桔子一样毫无意义。<br><br>
 为了更好地理解和建模DeFi领域中的风险将是促使其走向成熟最重要的一步。有许多工作要做，但现在是开始的时候了。希望这个模型和其他类似的模型能够为DeFi进行稳健的风险评估奠定基础。<br><br>
 在这里，我们引入了一个定量模型来评估这种无许可贷款协议（Permissionless lending protocols）中的风险水平。<br><br>
 注1:</br>
@@ -36,71 +37,68 @@ https://www.blockchain.com/btc/tx/4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc7
 注2:</br>
 根据DeFi Pulse贷款类目中总锁定价值（TVL）数据 <br><br>
 ## 无许可协议概况<br><br>
-无许可贷款协议是允许用户通过以太坊的“智能合约”借贷各种不同数字资产的系统。这些“智能合约”并不是法律意义上的合约；而是有效运行在以太坊链上的计算机代码。借出资产的用户将从其贷款中获得的利息。借款人提供抵押品（通常高于借款价值），并支付可变利息。无许可贷款协议的一些项目包括compound、dydx和nuo。<br><br>
+无许可贷款协议是允许用户通过以太坊的“智能合约”借贷各种不同数字资产的系统。这些“智能合约”并不是法律意义上的合同；而是有效运行在以太坊链上的计算机代码。借出资产的用户将从其贷款中获得的利息。借款人提供抵押品（通常高于借款价值），并支付利息。无许可贷款协议的一些项目包括compound、dydx和nuo。<br><br>
 ### 智能合约风险<br><br>
-在DeFi中，智能合约的风险是主要风险。尽管DeFi通常被称为去信任的(Trustless)，DeFi平台的用户必须信任他们正在交互的智能合约，这意味着用户信任合约代码就像信任Web2.0的应用那样。但智能合约对用户来说可能是不透明/磨糊的。还有一种风险是，智能合约由于不安全而遭到黑客攻击，这对合约中的用户产生严重的财务影响，包括，失去锁定在合约中的抵押品。我们提出的模型着眼于评估智能合约风险的这两个要素。<br><br>
+在DeFi中，智能合约的风险是主要风险。尽管DeFi通常被称为去信任的(Trustless)，DeFi平台的用户必须信任正在与他们交互的智能合约，这意味着用户信任合约代码就像信任Web2.0的应用那样。但智能合约对用户来说可能是不透明/模糊的。还有一种风险是，智能合约由于不安全而遭到黑客攻击，这对合约中的用户产生严重的财务影响，包括，失去锁定在合约中的抵押品。我们提出的模型着眼于评估智能合约风险的这两个要素。<br><br>
 ### 代码安全<br><br>
-当用户在与DeFi平台交互时存在丢失锁定在智能合约中的资金风险时，智能合约的安全性就显得非常重要。正如生态系统所得到的教训那样，智能合约中的错误可能导致重大的财务损失。例如，“DAO攻击”是针对“DAO”的项目发起的攻击，“DAO”是去中心自治组织的一种形式，即以太坊链上智能合约中体现的“虚拟”组织（注3）。2016年7月17日，一个未知的个人或团体从DAO快速转移大量ETH，导致大约360万ETH - DAO的1/3 ETH - 从DAO的地址转移到攻击者控制的地址。（注4）<br><br>
-虽然不能保证任何智能合约都是安全的、没有错误的，但一个信誉良好的安全公司提供的彻底的代码审计和正规化的验证过程将有助于发现严重的错误。缺陷赏金计划（Bug bounty programs）是另一个积极的体现，表明开发团队对安全的重视，鼓励独立的安全研究人员发现协议代码缺陷，最终允许更广泛的安全审查监督。<br><br>
+当用户在与DeFi平台交互时存在丢失锁定在智能合约中的资金风险时，智能合约的安全性就显得非常重要。正如以太坊生态系统所受到的教训那样，智能合约中的错误可能导致重大的财务损失。例如，“DAO攻击”是针对“DAO”的项目发起的攻击，“DAO”是去中心自治组织的一种形式，即以太坊链上智能合约中体现的“虚拟”组织（注3）。2016年7月17日，一个未知的个人或团体从DAO快速转移大量ETH，导致大约360万ETH - DAO的1/3 ETH - 从DAO的地址转移到攻击者控制的地址。（注4）<br><br>
+虽然任何智能合约都不能保证其是安全、没有错误的，但一个信誉良好的安全公司提供的彻底代码审计和形式化的验证都将有助于严重错误的发现。缺陷赏金计划（Bug bounty programs）是另一个积极的体现，表明开发团队对安全的重视，用赏金的形式鼓励独立的安全研究人员发现协议代码的缺陷，最终形成更广泛的安全审查监督。<br><br>
 我们的模型通过审查链下但公开的数据来评估代码的安全性：<br>
 1.	代码审计：代码是否经过信誉良好的安全团队（consensys diligence，trail of bits，others）的审计？<br>
-2.	正规验证：代码是否已经由信誉良好的安全团队正规的验证。<br>
+2.	形式化验证：代码是否已经由信誉良好的安全团队形式化验证。<br>
 3.	赏金计划：开发团队是否提供公开详细的代码缺陷赏金计划。<br><br>
 注3:</br>
 Securities and Exchange Commission, Release No. 81207, https://www.sec.gov/litigation/investreport/34‐81207.pdf (“SEC DAO Report”) at 1.<br><br>
 注4:</br>
 DAO攻击中资金是通过以太坊区块链（ID）的一个特别的“分叉”收回的，但这种分叉不能指望能从未来的黑客行为中收回。<br><br>
 ### 代码开放<br><br>
-DeFi承诺的一部分是，智能合约是完全在链上的，这意味着代码是可验证和透明的。虽然DeFi平台的开发人员仍然能够以各种方式隐藏他们的代码，例如不验证字节码和使用链下预言机（oracles）。这种磨糊的安全性只能提供薄弱的安全保证，最坏的情况是会导致关键错误的被延迟找到。虽然字节码反编译是可能的，但这是一个困难和耗时的过程，并且很难遵循“不相信，只验证”的口号。<br><br>
+DeFi承诺的一部分是，智能合约是完全在链上的，这意味着代码是透明且可验证的。虽然DeFi平台的开发人员仍然能够以各种方式隐藏他们的代码，例如不验证字节码和使用链下预言机（oracles）。这种模糊的安全性只能提供薄弱的安全保证，最坏的情况是会导致关键错误的被延迟发现。虽然字节码反编译是可能的，但这是一个困难和耗时的过程，并且很难遵循“不相信，只验证”的口号。<br><br>
 代码开放性是通过审查链下的公共数据，来验证字节码是否被验证来评估。<br><br>
 ## 财务风险<br><br>
-DeFi包含许多与传统金融相同的风险。虽然大多数贷款平台使用了超额抵押来降低信贷风险，但超额抵押并不能完全消除这样的无许可信贷的风险。因为我们都知道，现在的加密资产是极不稳定的，这些平台没能够拿这些不稳定的抵押资产来全部对冲借款。<br><br>
-目前我们的模型着眼于金融风险的两个要素：<br><br>
+DeFi包含许多与传统金融相同的风险。虽然大多数无许可贷款平台使用了超额抵押来降低贷款的风险，但超额抵押并不能完全消除这样的无许可贷款的风险。因为我们都知道，现在的加密资产极不稳定，因此这些平台没能够拿这些不稳定的抵押资产来全部对冲借款。<br><br>
+目前我们的模型着眼于金融属性风险的两个要素：<br><br>
 ### 抵押品<br><br>
-如果我们没能识别和接受的链上相对应借款人的声誉或身份，那么在DeFi借贷市场上避免信贷风险的唯一方法是使用超额抵押。虽然目前所有平台都使用了这种非常保守的担保，但加密资产的高波动性意味着，这些超额担保仍然不足。<br><br>
-这些DeFi平台支持的抵押资产也有很大的差异，其中一些由流动性更高、更稳定的资产组成（注5）。例如，一个平台接受ETH抵押。虽然ETH仍然不是一种非常稳定的资产，但与link（注6）这样的资产相比，它相对稳定且流动性高。在考虑平台风险时，这些抵押品的差异是一个重要因素。<br><br>
-抵押品风险是通过查看两个数据来评估的，这两个数据都能从链下数据派生出来的。第一个数据点是30天的平均抵押比率（EMA），在所有可用的贷款池中使用对数的离差标准化(Min-Max Normalization)。第二个是对抵押品组合的分析。一般情况下，EMA的计算方法如下：<br><br>
+目前为止，我们没有能识别和评估链上借款人声誉或身份的有效方法，所以在DeFi借贷市场上避免贷款风险的唯一方法就是使用超额抵押品。虽然目前所有平台都使用了这种非常保守的方法，但加密资产的高波动性的情况下，这些超额担保仍然不足。<br><br>
+这些DeFi平台支持的抵押资产也有很大的差异，其中一些是流动性更高、更稳定的抵押品（注5）。例如，一个平台接受ETH抵押。虽然ETH仍然不是一种非常稳定的资产，但与link（注6）这样的资产相比，它相对稳定且流动性高。在考虑平台风险时，这些抵押品的差异是一个重要因素。<br><br>
+我们的模型对抵押品风险是通过查看两个数据点来评估，这两个数据都能从链下数据派生出来的。第一个数据点是30天的平均抵押比率（EMA），在所有可用的贷款池中使用对数的离差标准化(Min-Max Normalization)。第二个是对抵押品组合的分析。一般情况下，EMA的计算方法如下：<br><br>
 ![defi-score](https://github.com/ConsenSys/defi-score/blob/master/assets/images/EMA.png)<br>
 •	系数α表示权重降低的程度，是介于0和1之间的常数平滑因子。选择了2/31的平滑因子。<br>
 •	Yt 是时间段t上的值。这是30，用于查找30天EMA <br>
 •	St是任意时间段t上EMA的值。<br><br>
-有许多不同的模型来评估抵押品资产组合的风险。最常见的模型之一是VAR（value at risk）模型。VAR模型有多种不同的变种。该模型目前最常用的是CVAR（条件风险价值）模型，也称为预期缺口模型。该方法使用CVAR而非VAR，因为CVAR更好地捕捉了称为黑天鹅的更极端情况的概率和下降。上图有助于证明这种差异——CVAR（ES）模型会导致更大的电位下降。由于加密资产的初级和极端波动性，该方法更为保守。模型采用99%CVAR模型，公式如下：<br><br>
+有许多不同的模型来评估抵押品组合的风险。最常见的模型之一是VaR（value at risk）模型。VaR模型有多种不同的变种。该模型目前最常用的是CVaR（条件风险价值）模型，也称为预期缺口模型。该方法使用CVaR而非VaR，因为CVaR更好地捕捉了称为黑天鹅的更极端情况的概率和下降。上图有助于证明这种差异——CVaR（ES）模型会导致更大的电位下降。由于加密资产的初级和极端波动性，该方法更为保守。模型采用99%置信水平CVaR模型，公式如下：<br><br>
 ![defi-score](https://github.com/ConsenSys/defi-score/blob/master/assets/images/cvar.png)<br>
 ![defi-score](https://github.com/ConsenSys/defi-score/blob/master/assets/images/histogram.png)<br>
-该百分比越高即视为CVAR更差，因为这意味着较高比例的总抵押品处于风险之中。<br>
+该百分比越高即视为CVaR更差，因为这意味着较高比例的总抵押品处于风险之中。<br>
 注5:</br>
 根据coinmarketcap的数据，ETH在过去30天的交易量达到了1907亿美元，而link则仅达到了22亿美元。<br>
 注6:</br>
 根据Yahoo Finance的数据，在过去一年中，Link-USD 30天的年化波动率高达330，ETH-USD高达165。<br><br>
 ### 流动性<br><br>
-当前平台都试图通过使用动态利率来激励流动性，动态利率模型根据每个资产池中的流动性水平产生不同的利率。然而，激励流动性并不意味着能保证流动性。用户要承担风险，因为所有资产都已借出，在极端情况下他们将无法全部收回借出的资产。<br><br>
-流动性风险的评估，是链上数据中的流动性的30天均线，使用所有可用贷款池中以美元表示的流动性金额的池中使用对数的离差标准化。使用流动性的绝对水平，而不是利用率（未偿债务/总资产）的百分比，因为这有一个副作用，也会使较大的资金池得分更高。<br><br>
+当前平台都试图通过使用动态利率来激励流动性，动态利率模型根据每个资产池中的流动性水平产生出不同的利率。然而，激励流动性并不意味着能保证流动性。用户要承担风险，因为所有资产都已借出，在极端情况下他们将无法全部收回借出的资产。<br><br>
+流动性风险的评估，是链上数据中的流动性的30天均线，使用所有可用贷款池中以美元表示的流动性金额的池中使用对数的离差标准化。使用流动性的绝对水平，而不是利用率的百分比（未偿债务/总资产），因为这有一个副作用，也会使较大的资金池得分更高。<br><br>
 
 ### 中心化 & 中介风险
-Centralization risk is an important risk to consider when lending money with DeFi protocols. Different DeFi protocols have different levels of centralization risk, and the DeFi Score should attempt to highlight them.
-在使用DeFi协议贷款时，集中化风险是一个需要考虑的重要风险。不同的DeFi方案有不同程度的集中风险，DeFi评分应尽量突出这些风险。
+在使用DeFi贷款协议时，中心化风险是一个需要考虑的重要风险。不同的DeFi协议有不同程度的中心化风险，DeFi评分应尽量突出强调这些风险。
 
 #### 协议管理
-One of the biggest contributors to centralization risk in DeFi protocols is the use of admin keys. Admin keys allow protocol developers to change different parameters of their smart contract systems like oracles, interest rates and potentially more. Protocol developer’s’ ability to alter these contract parameters allows them to cause financial loss to users. Measures like timelocks and multi-signature wallets help mitigate the risk of financial loss due to centralized elements. Mult-signature wallets help mitigate this risk by distributing control to a larger number of developers, meaning that the loss or compromise of a single private key cannot compromise the entire system.  Timelocks help mitigate risk by allowing protocol users to exit their positions before a change can take place. <br>
-DeFi协议中心化风险的最大贡献之一是管理密钥的使用。管理密钥允许协议开发人员更改其智能合约系统的不同参数，如oracle、利率等。协议开发人员更改这些合同参数的能力允许它们给用户造成经济损失。像Timelock和多签名钱包这样的措施有助于减轻由于集中元素而造成的财务损失风险。多签名钱包通过将控制权分配给更多的开发人员来帮助降低这种风险，这意味着单个私钥的丢失或泄露不会危及整个系统。Timelock有助于通过允许协议用户在改变发生之前退出他们的位置来降低风险。
+DeFi协议中心化风险的最大贡献之一是管理密钥的使用。管理密钥允许协议开发人员更改其智能合约系统的不同参数，如oracle、利率等。协议开发人员更改这些合同参数的能力允许它们给用户造成经济损失。像Timelock和多签名钱包这样的措施有助于减轻由于集中元素而造成的财务损失风险。多签名钱包通过将控制权分配给更多的开发人员来帮助降低这种风险，这意味着单个私钥的丢失或泄露不会危及整个系统。Timelock有助于通过允许协议用户在改变发生之前退出他们的位置来降低风险。<br>
 
 | 评分        | 描述           | 
 | ------------ |-------------| 
-| 1    | Admin keys without timelock / 不带timelock的管理密钥  | 
-| 2    | Admin keys with timelock / 带timelock的管理密钥   |
-| 3 | Admin keys with timelock and multisig /带timelock和multisig的管理密钥  |
-| 4 | No admin keys - autonomous/decentralized governance /无管理密钥-自治/分散管理 | 
+| 1    | 管理密钥不带timelock  | 
+| 2    | 管理密钥带timelock   |
+| 3 | 管理密钥带timelock和multisig  |
+| 4 | 无需管理密钥-自治/去中心化治理 | 
 
 #### 预言机
-Another large element of centralization risk in these protocols is oracle centralization. There are many different flavors of oracle systems being used to power these protocols. Some protocols use a fully self-operated oracle system while others use externally operated oracles like Uniswap and Kyber. Samczun’s writeup on oracles and their ability to cause financial loss provides good background information. The oracle centralization score is not focused on whether these price feeds are manipulatable or not (they all are), but whether a single entity can manipulate them with ease. In the self-operated model, it only takes the oracle owner to manipulate its data. Decentralized oracles can’t be manipulated in the same way, but may not always represent the fair market value for an asset, which is why developers building on top of decentralized oracles opt to use price volatility bounds to defend against these types of attacks.<br>
-这些协议中集中化风险的另一个重要因素是oracle集中化。有许多不同类型的oracle系统被用来支持这些协议。有些协议使用完全自主操作的oracle系统，而另一些使用外部操作的oracle，如Uniswap和Kyber。Samczun关于神谕的写作和他们造成经济损失的能力提供了很好的背景资料。甲骨文的集中化得分并不关注这些价格馈送是否可操作（它们都是），而是单个实体是否可以轻松地操作它们。在自操作模型中，只需要oracle所有者操作其数据。去中心化的预言家不能以同样的方式被操纵，但可能并不总是代表一项资产的公平市场价值，这就是为什么在去中心化预言家之上建造的开发商选择使用价格波动边界来抵御这些类型的攻击。
+这些协议中集中化风险的另一个重要因素是oracle集中化。有许多不同类型的oracle系统被用来支持这些协议。有些协议使用完全自主操作的oracle系统，而另一些使用外部操作的oracle，如Uniswap和Kyber。Samczun关于神谕的写作和他们造成经济损失的能力提供了很好的背景资料。甲骨文的集中化得分并不关注这些价格馈送是否可操作（它们都是），而是单个实体是否可以轻松地操作它们。在自操作模型中，只需要oracle所有者操作其数据。去中心化的预言家不能以同样的方式被操纵，但可能并不总是代表一项资产的公平市场价值，这就是为什么在去中心化预言家之上建造的开发商选择使用价格波动边界来抵御这些类型的攻击。<br>
 
 | 评分        | 描述           | 
 | ------------ |-------------| 
-| 1    | Only centralized self-operated oracles used / 只使用集中的自办神谕 | 
-| 2    | Mix of centralized and decentralized oracles used / 集中和分散使用的神谕的混合     |
-| 3 | Only decentralized oracles used /只使用分散的神谕 |
-| 4 | No oracles needed / 不需要神谕 | 
+| 1    | 只使用中心化的自控预言机 | 
+| 2    | 使用混合了中心化和去中心化的预言机     |
+| 3 | 只使用去中心化的预言机 |
+| 4 | 不需要预言机 | 
 
 ## 公式分解<br><br>
 1.	智能合约风险/Smart Contract Risk (45%)<br>
