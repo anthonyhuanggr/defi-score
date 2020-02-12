@@ -1,5 +1,31 @@
-# DeFi评估：评估无许可贷款协议的风险 <br/>  
+# DeFi评估：评估无许可贷款协议的风险 <br/> 
+## [tl;dr]<br/>
 本文介绍一个无许可贷款协议（Permissionless Lending Protocols）中风险水平的评估模型。为了展现这些协议平台中存在的各种风险，我们使用了一个多因素模型来研究智能合约、抵押品和流动性风险。该模型混合了公链中链上和链下的数据来更好地评估不同的、基于以太坊的无许可贷款协议产品的相对风险水平。<br><br/>
+
+## 目录
+ 
+  - [目录](#table-of-contents)
+  - [简介](#简介)
+  - [无许可贷款协议概述](#overview-of-permissionless-lending-protocols)
+    - [智能合约技术风险](#smart-contract-risk)
+      - [代码安全](#code-security)
+      - [代码开放](#code-openness)
+    - [金融属性风险](#financial-risk)
+      - [抵押品](#collateral)
+      - [流动性](#liquidity)
+    - [中心化 & 中介风险](#centralization--intermediary-risk)
+      - [协议管理](#protocol-administration)
+      - [预言机](#oracles)
+  - [公式分解](#formula-breakdown)
+  - [局限](#limitations)
+    - [DAI Savings Rate](#dai-savings-rate)
+  - [未来的改善](#future-improvements)
+  - [参考](#references)
+  - [贡献者](#contributors)
+    - [主要贡献者:](#key-contributors)
+    - [更多的贡献者:](#additional-contributors)
+  - [社区](#community)
+  - [许可](#license)
 ## 简介 <br/>
 中本聪创立比特币的主要动力是2008年的金融危机。他在比特币的创世区块（Genesis Block）提到了当时的银行救助计划（注1）。一些人认为，金融危机部分原因是由于金融界对整个金融体系信贷风险的误解和错误定价造成的。风险管理是现代金融中最关键的部分之一，它为我们建立了一个更加稳健和安全的金融体系。<br><br>
 在过去的一年里，我们看到了以太坊上无许可的金融协议爆炸式增长，其中很大一部分集中在借贷市场。这些市场已发展成为“去中心化金融”或“DeFi”的最大子类别，年增长率达355% （注2）。然而，并非所有的借贷平台都是一样的。不同的无许可贷款产品具有非常不同的风险/回报，这使得仅比较它们的利率就好像比较苹果和桔子一样毫无意义。<br><br>
