@@ -27,7 +27,7 @@
     - [更多的贡献者:](#additional-contributors)
   - [社区](#community)
   - [许可](#license)
-## 简介 <br/>
+## 简介
 中本聪创立比特币的主要动力是2008年的金融危机。他在比特币的创世区块（Genesis Block）提到了当时的银行救助计划（注1）。一些人认为，金融危机部分原因是由于金融界对整个金融体系信贷风险的误解和错误定价造成的。风险管理是现代金融中最关键的部分之一，它为我们建立了一个更加稳健和安全的金融体系。<br><br>
 在过去的一年里，我们看到了以太坊上无许可的金融协议爆炸式增长，其中很大一部分集中在借贷市场。这些市场已发展成为“去中心化金融”或“DeFi”中的最大子类别，年增长率达355% （注2）。然而，并非所有的借贷平台都是一样的。不同的无许可贷款产品具有非常不同的风险/回报，这使得仅比较它们的利率就好像比较苹果和桔子一样毫无意义。<br><br>
 为了更好地理解和建模DeFi领域中的风险将是促使其走向成熟最重要的一步。有许多工作要做，但现在是开始的时候了。希望这个模型和其他类似的模型能够为DeFi进行稳健的风险评估奠定基础。<br><br>
@@ -101,20 +101,20 @@ DeFi协议中心化风险的最大贡献之一是管理密钥的使用。管理�
 | 4 | 不需要预言机 | 
 
 ## 公式分解<br><br>
-1.	智能合约风险/Smart Contract Risk (45%)<br>
+1.	智能合约风险 (45%)<br>
 •	代码审计/Audited code (25%)</br>
 •	合约字节码解构/All code’s byte source verified (15%)</br>
 •	正规化的验证/Formal Verification (5%)</br>
 •	缺陷赏金计划/Bug Bounty Program (5%)<br><br>
 
-2.	财务风险/Financial Risk (30%)<br>
-•	 抵押组合CVAR /Collateral Makeup CVAR (10%)</br>
-•	 抵押组合CVAR /Utilization Ratio (10%)</br> 
-•	 抵押组合CVAR /Absolute Liquidity (10%)</br> 
+2. 金融属性风险(30%)<br>
+•	 抵押组合CVaR (10%)</br>
+•	 利用率 /Utilization Ratio (10%)</br> 
+•	 流动性风险 /Absolute Liquidity (10%)</br> 
 
-3.	中心化风险 Centralization Risk (25%)</br>
+3.	中心化风险(25%)</br>
 •	协议管理/Protocol Administration (12.5%) <br><br>
-•	预言机/Oracles (12.5%) <br><br>
+•	预言机 (12.5%) <br><br>
 
 ## 局限<br><br>
 这还不是一个有效的统计模型。没有足够的数据在产品范围内对此模型做过足够多的验证。这仅是一个观点性的评估框架，用于评估不同DeFi平台的相关风险。<br><br>
@@ -124,7 +124,6 @@ DeFi协议中心化风险的最大贡献之一是管理密钥的使用。管理�
 __此模型不考虑与这些产品相关的许多其他风险，如清算政策风险。__<br><br>
 
 ### DAI 存款利率
-Although the model was designed specifically for lending pools, the ability to earn money through the DAI Savings Rate is such a significant earning opportunity that we felt very strongly that it should be scored and included in our reference python implementation. Despite the fact that we have plans to design a model that better fits this (somewhat unique) opportunity, there was enough interest to warrant adding a preliminary score based off a few of DSR's characteristics. Here is the breakdown of its score:
 尽管该模型是专门为贷款池而设计的，但是通过DAI储蓄率赚钱的能力是一个非常重要的赚钱机会，我们强烈地感到应该对它进行评分并将其包含在我们的参考python实现中。尽管我们计划设计一个更适合这个（有些独特的）机会的模型，但有足够的兴趣根据DSR的一些特性添加一个初步评分。以下是它的分数：
 
 | 类别   |  评分   |
@@ -134,14 +133,14 @@ Although the model was designed specifically for lending pools, the ability to e
 | 中心化风险 | 21.875/25 |
 | **合计** | **96.875/100** |  
 
-Some notes/一些注释:
-* Because its smart contract has been audited, had its bytecode verified, has been formally verified, and has a bug bounty program, it gets a perfect score for "Smart Contract Risk."因为DSR的智能合约已经过审计，字节码也经过验证，已经过正式验证，并且有一个bug悬赏程序，所以它获得了“智能合约风险”的完美分数
-* What the DeFi Score calls "Financial Risk" does not apply to the earning opportunity presented by DSR. Because of this, DSR gets a perfect score for this category.DeFi 评分中所称的“财务风险”不适用于DSR提供的盈利机会。正因为如此，DSR得到了这个类别的完美分数。
-* Because the protocol has a multisig admin key with a timelock and does not require oracles, it gets 7/8 of 25% for "Centralization Risk."因为该协议有一个带有timelock和multisig的管理密钥，并且不需要预言机，所以它获得“中心化风险”25%评分中的7/8.
+注释:
+* 因为DSR的智能合约已经过审计，字节码也经过验证，已经过正式验证，并且有一个bug缺陷赏金计划，所以它获得了“智能合约风险”的完美分数
+* DeFi 评分中所称的“财务风险”不适用于DSR提供的盈利机会。正因为如此，DSR得到了这个类别的完美分数。
+* 因为该协议有一个带有timelock和multisig的管理密钥，并且不需要预言机，所以它获得“中心化风险”25%评分中的7/8.
 
 
 ## 未来的改善<br><br>
-这个模型还有很多工作要做，这是早期研究。这个模型需要更多的微调及验证。在这个模型中还需要包括其他相关风险，如集中度风险、Oracle/预言机风险和清算政策风险。其中一些很难量化，这就是为什么它们没有包含在初始迭代中的原因。<br><br>
+这个模型还有很多工作要做，这是早期研究。这个模型需要更多的微调及验证。在这个模型中还需要包括其他相关风险，如清算政策风险。其中一些很难量化，这就是为什么它们没有包含在初始迭代中的原因。<br><br>
 最后，将这些评估要素分解成各自的、更精确的评分算法是很有意义的。这样子要素就能组合成不同类型的区块链金融产品。未来能覆盖的范围包括额外的DeFi收益类产品（如set）、合成资产产品（如maker和uma）、做市产品（如uniswap）以及对冲这些产品的各种Cefi (中心化金融) 相对应的产品。<br><br>
 另一个最终目标是提供一个API接口与其他评估算法互动，这样其他第一层和第二层DeFi产品就可以利用这个API。这将有助于输出研究和教育用户。<br><br>
 这个评估方法一开始就在Github上开源，最终目标是希望通过去中化的社区治理来确定评估的因子和因子的权重。<br><br>
