@@ -75,29 +75,73 @@ DeFi包含许多与传统金融相同的风险。虽然大多数贷款平台使�
 ### 流动性<br><br>
 当前平台都试图通过使用动态利率来激励流动性，动态利率模型根据每个资产池中的流动性水平产生不同的利率。然而，激励流动性并不意味着能保证流动性。用户要承担风险，因为所有资产都已借出，在极端情况下他们将无法全部收回借出的资产。<br><br>
 流动性风险的评估，是链上数据中的流动性的30天均线，使用所有可用贷款池中以美元表示的流动性金额的池中使用对数的离差标准化。使用流动性的绝对水平，而不是利用率（未偿债务/总资产）的百分比，因为这有一个副作用，也会使较大的资金池得分更高。<br><br>
-## 其他考虑要素<br><br>
-### 保险<br><br>
-在大多数发达的银行系统中，货币市场账户都有某种形式的存款保险。在美国，这种存款保险是联邦存款保险公司（FDIC）的保险，为单个银行存款账户提供最高25万美元的保险。在DeFi生态系统中还没有类似的存款保险。尽管在DeFi保险领域（nexus mutual）有一些有前途的创新，但还没有一个足够广泛或成熟的产品为DeFi产品做保险。<br><br>
-一些平台将其平台应计利息的一部分用于保险准备金，以防出现流动性紧缩或黑天鹅事件。然而，这些保险池不够大，远远无法覆盖其中一个平台上的大型破产事件所产生的损失。<br><br>
-### 监管<br><br>
-作为一个行业，DeFi是非常新的，算法货币市场更是如此。这些平台的开发团队实际上还是中心化运作的，也没有一个得到美国或其他国家银行/金融监管机构的批准。这意味着，用户在与这些平台互动时也会承担一定程度的监管风险。<br><br>
+
+### 中心化 & 中介风险
+Centralization risk is an important risk to consider when lending money with DeFi protocols. Different DeFi protocols have different levels of centralization risk, and the DeFi Score should attempt to highlight them.
+在使用DeFi协议贷款时，集中化风险是一个需要考虑的重要风险。不同的DeFi方案有不同程度的集中风险，DeFi评分应尽量突出这些风险。
+
+#### 协议管理
+One of the biggest contributors to centralization risk in DeFi protocols is the use of admin keys. Admin keys allow protocol developers to change different parameters of their smart contract systems like oracles, interest rates and potentially more. Protocol developer’s’ ability to alter these contract parameters allows them to cause financial loss to users. Measures like timelocks and multi-signature wallets help mitigate the risk of financial loss due to centralized elements. Mult-signature wallets help mitigate this risk by distributing control to a larger number of developers, meaning that the loss or compromise of a single private key cannot compromise the entire system.  Timelocks help mitigate risk by allowing protocol users to exit their positions before a change can take place. <br>
+DeFi协议中心化风险的最大贡献之一是管理密钥的使用。管理密钥允许协议开发人员更改其智能合约系统的不同参数，如oracle、利率等。协议开发人员更改这些合同参数的能力允许它们给用户造成经济损失。像Timelock和多签名钱包这样的措施有助于减轻由于集中元素而造成的财务损失风险。多签名钱包通过将控制权分配给更多的开发人员来帮助降低这种风险，这意味着单个私钥的丢失或泄露不会危及整个系统。Timelock有助于通过允许协议用户在改变发生之前退出他们的位置来降低风险。
+
+| 评分        | 描述           | 
+| ------------ |-------------| 
+| 1    | Admin keys without timelock / 不带timelock的管理密钥  | 
+| 2    | Admin keys with timelock / 带timelock的管理密钥   |
+| 3 | Admin keys with timelock and multisig /带timelock和multisig的管理密钥  |
+| 4 | No admin keys - autonomous/decentralized governance /无管理密钥-自治/分散管理 | 
+
+#### 预言机
+Another large element of centralization risk in these protocols is oracle centralization. There are many different flavors of oracle systems being used to power these protocols. Some protocols use a fully self-operated oracle system while others use externally operated oracles like Uniswap and Kyber. Samczun’s writeup on oracles and their ability to cause financial loss provides good background information. The oracle centralization score is not focused on whether these price feeds are manipulatable or not (they all are), but whether a single entity can manipulate them with ease. In the self-operated model, it only takes the oracle owner to manipulate its data. Decentralized oracles can’t be manipulated in the same way, but may not always represent the fair market value for an asset, which is why developers building on top of decentralized oracles opt to use price volatility bounds to defend against these types of attacks.<br>
+这些协议中集中化风险的另一个重要因素是oracle集中化。有许多不同类型的oracle系统被用来支持这些协议。有些协议使用完全自主操作的oracle系统，而另一些使用外部操作的oracle，如Uniswap和Kyber。Samczun关于神谕的写作和他们造成经济损失的能力提供了很好的背景资料。甲骨文的集中化得分并不关注这些价格馈送是否可操作（它们都是），而是单个实体是否可以轻松地操作它们。在自操作模型中，只需要oracle所有者操作其数据。去中心化的预言家不能以同样的方式被操纵，但可能并不总是代表一项资产的公平市场价值，这就是为什么在去中心化预言家之上建造的开发商选择使用价格波动边界来抵御这些类型的攻击。
+
+| 评分        | 描述           | 
+| ------------ |-------------| 
+| 1    | Only centralized self-operated oracles used / 只使用集中的自办神谕 | 
+| 2    | Mix of centralized and decentralized oracles used / 集中和分散使用的神谕的混合     |
+| 3 | Only decentralized oracles used /只使用分散的神谕 |
+| 4 | No oracles needed / 不需要神谕 | 
+
 ## 公式分解<br><br>
-1.	智能合约风险/Smart Contract Risk (50%)<br>
+1.	智能合约风险/Smart Contract Risk (45%)<br>
 •	代码审计/Audited code (25%)</br>
 •	合约字节码解构/All code’s byte source verified (15%)</br>
 •	正规化的验证/Formal Verification (5%)</br>
 •	缺陷赏金计划/Bug Bounty Program (5%)<br><br>
-2.	财务风险/Financial Risk (35%)<br>
+
+2.	财务风险/Financial Risk (30%)<br>
 •	 抵押组合CVAR /Collateral Makeup CVAR (10%)</br>
-•	30天EMA抵押比率 /Collateralization Ratio 30d EMA (15%)</br>
-•	30天EMA流动性 /Liquidity 30d EMA (10%)<br><br>
-3.	其他考虑因素 (15%)</br>
-•	保险及监管<br><br>
+•	 抵押组合CVAR /Utilization Ratio (10%)</br> 
+•	 抵押组合CVAR /Absolute Liquidity (10%)</br> 
+
+3.	中心化风险 Centralization Risk (25%)</br>
+•	协议管理/Protocol Administration (12.5%) <br><br>
+•	预言机/Oracles (12.5%) <br><br>
+
 ## 局限<br><br>
 这还不是一个有效的统计模型。没有足够的数据在产品范围内对此模型做过足够多的验证。这仅是一个观点性的评估框架，用于评估不同DeFi平台的相关风险。<br><br>
 这种评估方法是基于相对短期（不到一年）的投资质量意见。这些建议也不能对投资规模大小作区别对待，但这可能对流动性风险产生重大影响。该方法仍处于早期阶段，我们评级系统期待大家更正更新及反馈。<br><br>
 我们这种方法试图在相对的而不是绝对的基础上，比较不同的DeFi借贷市场平台风险。这是其他DeFi货币市场平台与传统金融投资（如存款账户）之间的比较。DeFi领域还很新，如果没有丰富的历史数据，就更难做出前瞻性的表述。<br><br>
-此模型不考虑与这些产品相关的许多其他风险，如预言机/Oracle数据风险、中心化风险和清算政策风险。<br><br>
+
+__此模型不考虑与这些产品相关的许多其他风险，如清算政策风险。__<br><br>
+
+### DAI 存款利率
+Although the model was designed specifically for lending pools, the ability to earn money through the DAI Savings Rate is such a significant earning opportunity that we felt very strongly that it should be scored and included in our reference python implementation. Despite the fact that we have plans to design a model that better fits this (somewhat unique) opportunity, there was enough interest to warrant adding a preliminary score based off a few of DSR's characteristics. Here is the breakdown of its score:
+尽管该模型是专门为贷款池而设计的，但是通过DAI储蓄率赚钱的能力是一个非常重要的赚钱机会，我们强烈地感到应该对它进行评分并将其包含在我们的参考python实现中。尽管我们计划设计一个更适合这个（有些独特的）机会的模型，但有足够的兴趣根据DSR的一些特性添加一个初步评分。以下是它的分数：
+
+| 类别   |  评分   |
+| ---------- | ------- |
+| 智能合约风险 | 45/45 |
+| 金融属性风险 | 30/30 |
+| 中心化风险 | 21.875/25 |
+| **合计** | **96.875/100** |  
+
+Some notes/一些注释:
+* Because its smart contract has been audited, had its bytecode verified, has been formally verified, and has a bug bounty program, it gets a perfect score for "Smart Contract Risk."因为DSR的智能合约已经过审计，字节码也经过验证，已经过正式验证，并且有一个bug悬赏程序，所以它获得了“智能合约风险”的完美分数
+* What the DeFi Score calls "Financial Risk" does not apply to the earning opportunity presented by DSR. Because of this, DSR gets a perfect score for this category.DeFi 评分中所称的“财务风险”不适用于DSR提供的盈利机会。正因为如此，DSR得到了这个类别的完美分数。
+* Because the protocol has a multisig admin key with a timelock and does not require oracles, it gets 7/8 of 25% for "Centralization Risk."因为该协议有一个带有timelock和multisig的管理密钥，并且不需要预言机，所以它获得“中心化风险”25%评分中的7/8.
+
+
 ## 未来的改善<br><br>
 这个模型还有很多工作要做，这是早期研究。这个模型需要更多的微调及验证。在这个模型中还需要包括其他相关风险，如集中度风险、Oracle/预言机风险和清算政策风险。其中一些很难量化，这就是为什么它们没有包含在初始迭代中的原因。<br><br>
 最后，将这些评估要素分解成各自的、更精确的评分算法是很有意义的。这样子要素就能组合成不同类型的区块链金融产品。未来能覆盖的范围包括额外的DeFi收益类产品（如set）、合成资产产品（如maker和uma）、做市产品（如uniswap）以及对冲这些产品的各种Cefi (中心化金融) 相对应的产品。<br><br>
