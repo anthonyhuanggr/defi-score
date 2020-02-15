@@ -103,7 +103,7 @@ DeFi协议中心化风险的最大贡献之一是管理密钥的使用。管理�
 ## 公式分解<br><br>
 1.	智能合约风险 (45%)<br>
 •	代码审计/Audited code (25%)</br>
-•	合约字节码解构/All code’s byte source verified (15%)</br>
+•	合约字节码解构/All code’s byte source verified (10%)</br>
 •	正规化的验证/Formal Verification (5%)</br>
 •	缺陷赏金计划/Bug Bounty Program (5%)<br><br>
 
